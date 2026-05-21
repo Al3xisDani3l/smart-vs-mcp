@@ -2,7 +2,7 @@
   "name": "smart-vs-mcp-dev",
   "description": "Development marketplace for smart-vs-mcp workspace-aware Visual Studio MCP wrapper",
   "owner": {
-    "name": "SMART_VS_MCP maintainers"
+    "name": "Al3xisDani3l"
   },
   "plugins": [
     {
@@ -11,7 +11,7 @@
       "version": "1.0.0",
       "source": "./",
       "author": {
-        "name": "SMART_VS_MCP maintainers"
+        "name": "Al3xisDani3l"
       }
     }
   ]

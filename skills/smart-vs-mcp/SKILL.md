@@ -57,5 +57,5 @@ Use this skill when working with the workspace-aware Visual Studio MCP wrapper i
 Before MCP Market submission:
 
 - Ensure repo contains `.codex-plugin`, `.claude-plugin`, `.cursor-plugin`, `hooks`, `skills`, `gemini-extension.json`, and README install docs.
-- Replace `https://github.com/<owner>/SMART_VS_MCP` placeholders after the public GitHub remote exists.
+- Confirm plugin manifests point to `https://github.com/Al3xisDani3l/smart-vs-mcp`.
 - Submit the public GitHub repo URL at `https://mcpmarket.com/es/submit`.

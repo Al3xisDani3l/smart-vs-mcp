@@ -134,7 +134,7 @@ On Windows, hook execution expects Git for Windows Bash. If `bash` resolves to W
 When this repo has a public GitHub remote, replace placeholder URLs:
 
 ```text
-https://github.com/<owner>/SMART_VS_MCP
+https://github.com/Al3xisDani3l/smart-vs-mcp
 ```
 
 Then submit the repository URL at:
