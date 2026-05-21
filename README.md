@@ -108,9 +108,11 @@ npx skillfish submit Al3xisDani3l/smart-vs-mcp -y
 Install as a Codex plugin:
 
 ```powershell
-codex plugin marketplace add al3xisdani3l/smart-vs-mcp
+codex plugin marketplace add Al3xisDani3l/smart-vs-mcp
 codex plugin add smart-vs-mcp
 ```
+
+⚠️ **Note:** In `codex plugin add`, `@` separates plugin name from **marketplace name**, not npm version tags. Example: `codex plugin add smart-vs-mcp@marketplace-name`. The marketplace must be pre-registered via `codex plugin marketplace add`. If installing a specific branch, add it when registering the marketplace: `codex plugin marketplace add Al3xisDani3l/smart-vs-mcp --ref branch-name`.
 
 Use the plugin once published, or configure the stdio server directly:
 
