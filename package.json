@@ -16,6 +16,22 @@
   "bin": {
     "smart-vs-mcp": "dist/index.js"
   },
+  "files": [
+    "dist/**/*.js",
+    "dist/**/*.js.map",
+    "dist/mcp-use.json",
+    "public/",
+    "skills/",
+    "hooks/",
+    ".codex-plugin/",
+    ".claude-plugin/",
+    ".cursor-plugin/",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "gemini-extension.json",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx index.ts",

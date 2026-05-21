@@ -1,0 +1,43 @@
+{
+  "name": "smart-vs-mcp",
+  "version": "1.0.0",
+  "description": "Workspace-aware stdio wrapper for Visual Studio MCP HTTP endpoints.",
+  "author": {
+    "name": "SMART_VS_MCP maintainers"
+  },
+  "homepage": "https://github.com/<owner>/SMART_VS_MCP",
+  "repository": "https://github.com/<owner>/SMART_VS_MCP",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "visual-studio",
+    "vs-mcp",
+    "workspace",
+    "codex",
+    "claude"
+  ],
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "interface": {
+    "displayName": "smart-vs-mcp",
+    "shortDescription": "Route VS-MCP by workspace instead of hardcoded ports",
+    "longDescription": "smart-vs-mcp is a workspace-aware stdio wrapper for Visual Studio MCP. It reads per-workspace .mcp settings, resolves the correct VS-MCP HTTP endpoint, and proxies MCP traffic without hardcoded ports.",
+    "developerName": "SMART_VS_MCP maintainers",
+    "category": "Coding",
+    "capabilities": [
+      "Read",
+      "Interactive"
+    ],
+    "defaultPrompt": [
+      "Use smart-vs-mcp to diagnose the Visual Studio MCP endpoint for this workspace.",
+      "Configure this workspace to use smart-vs-mcp instead of a hardcoded VS-MCP port."
+    ],
+    "websiteURL": "https://github.com/<owner>/SMART_VS_MCP",
+    "privacyPolicyURL": "https://github.com/<owner>/SMART_VS_MCP",
+    "termsOfServiceURL": "https://github.com/<owner>/SMART_VS_MCP",
+    "brandColor": "#2563EB",
+    "composerIcon": "./public/icon.svg",
+    "logo": "./public/icon.svg",
+    "screenshots": []
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "name": "smart-vs-mcp",
+  "description": "Workspace-aware stdio wrapper for Visual Studio MCP HTTP endpoints.",
+  "version": "1.0.0",
+  "author": {
+    "name": "SMART_VS_MCP maintainers"
+  },
+  "homepage": "https://github.com/<owner>/SMART_VS_MCP",
+  "repository": "https://github.com/<owner>/SMART_VS_MCP",
+  "license": "MIT",
+  "keywords": [
+    "mcp",
+    "visual-studio",
+    "vs-mcp",
+    "workspace",
+    "claude-code"
+  ]
+}

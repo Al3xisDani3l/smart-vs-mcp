@@ -1,0 +1,4 @@
+interface:
+  display_name: "Smart VS-MCP"
+  short_description: "Workspace-aware VS-MCP setup guide"
+  default_prompt: "Use $smart-vs-mcp to configure and diagnose the workspace-aware Visual Studio MCP wrapper."

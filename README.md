@@ -55,3 +55,90 @@ npm run typecheck
 npm test
 npm run build
 ```
+
+## Plugin Package
+
+This repository is prepared as a multi-client plugin package, following the same broad structure used by `obra/superpowers`:
+
+```text
+.codex-plugin/plugin.json
+.claude-plugin/plugin.json
+.cursor-plugin/plugin.json
+gemini-extension.json
+hooks/
+skills/
+```
+
+The included `smart-vs-mcp` skill explains setup, client configuration, workspace settings, and troubleshooting.
+
+## Client Installation
+
+### Codex App / Codex CLI
+
+Use the plugin once published, or configure the stdio server directly:
+
+```toml
+[mcp_servers.vs-mcp-smart]
+type = "stdio"
+command = "smart-vs-mcp"
+```
+
+### Claude Code
+
+Use the plugin once published. For local testing, add a stdio MCP server with command `smart-vs-mcp`.
+
+The plugin hook injects diagnostic context at session start. It does not edit your Claude configuration and does not start a persistent daemon.
+
+### Claude Desktop
+
+Add an MCP server entry:
+
+```json
+{
+  "mcpServers": {
+    "vs-mcp-smart": {
+      "command": "smart-vs-mcp",
+      "args": []
+    }
+  }
+}
+```
+
+### Cursor / Gemini / Other CLIs
+
+Use their plugin/extension support when available, or configure the same stdio command:
+
+```text
+smart-vs-mcp
+```
+
+## Hooks
+
+SessionStart hooks are diagnostic only. They:
+
+- locate this plugin checkout
+- run `node dist/index.js status` when the build exists
+- report `npm install && npm run build` when the build is missing
+- emit host-compatible context JSON
+- never modify user config files
+- never leave background processes running
+
+On Windows, hook execution expects Git for Windows Bash. If `bash` resolves to WSL (`C:\Windows\system32\bash.exe`), use Git Bash explicitly for local simulation:
+
+```powershell
+& 'C:\Program Files\Git\bin\bash.exe' hooks/run-hook.cmd session-start
+```
+
+## MCP Market Submission
+
+When this repo has a public GitHub remote, replace placeholder URLs:
+
+```text
+https://github.com/<owner>/SMART_VS_MCP
+```
+
+Then submit the repository URL at:
+
+```text
+https://mcpmarket.com/es/submit
+```
