@@ -1,8 +1,7 @@
-## 1.0.3 - 2026-05-21
+## 1.0.4 - 2026-05-21
 
-Changes since v1.0.2.
+Changes since v1.0.3.
 
-### Features
+### Documentation
 
-- agregar bandera de versión y mostrarla en doctor
-- priorizar msvcinfo como fallback global de vs-mcp
+- actualizar comandos de instalación de codex
