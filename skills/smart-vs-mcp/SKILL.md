@@ -43,6 +43,31 @@ Use this skill when working with the workspace-aware Visual Studio MCP wrapper i
 - Claude Desktop: add an `mcpServers` entry using `smart-vs-mcp` as command.
 - Cursor, Gemini, Windsurf, and other clients: use stdio command if supported; otherwise use their plugin manifest/extension format from this repo.
 
+## Solution AGENTS.md Guidance
+
+When adding guidance to a solution repo, refer to the MCP server as `vs-mcp-smart`, not hardcoded `vs-mcp`.
+
+Use this block:
+
+```markdown
+## MCP Tools - ALWAYS PREFER
+
+This solution uses `vs-mcp-smart`, a workspace-aware wrapper around Visual Studio MCP. It resolves the correct VS-MCP endpoint from `.mcp/mcpserver.settings.json`.
+
+When `vs-mcp-smart` tools are available, ALWAYS use them before Grep/Glob/LS:
+
+| Instead of | Use |
+|------------|-----|
+| `Grep` for symbols | `FindSymbols`, `FindSymbolUsages` |
+| `LS` to explore projects | `GetSolutionTree` |
+| Reading files to find code | `FindSymbolDefinition` then `Read` |
+| Searching for method calls | `GetMethodCallers`, `GetMethodCalls` |
+
+Why: `vs-mcp-smart` routes to the correct Visual Studio instance for this workspace. MCP tools use Roslyn semantic analysis, reduce token use, and avoid broad text scans.
+
+If tools are missing, run `smart-vs-mcp doctor --workspace <repo>` before falling back to manual search.
+```
+
 ## Troubleshooting
 
 - Wrong Visual Studio instance: run `smart-vs-mcp doctor --workspace <path>` and confirm `Resolved Port`.

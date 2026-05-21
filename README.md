@@ -83,6 +83,8 @@ type = "stdio"
 command = "smart-vs-mcp"
 ```
 
+Use `vs-mcp-smart` as the logical MCP server name in client configs and repo instructions. The executable remains `smart-vs-mcp`.
+
 ### Claude Code
 
 Use the plugin once published. For local testing, add a stdio MCP server with command `smart-vs-mcp`.
@@ -127,6 +129,29 @@ On Windows, hook execution expects Git for Windows Bash. If `bash` resolves to W
 
 ```powershell
 & 'C:\Program Files\Git\bin\bash.exe' hooks/run-hook.cmd session-start
+```
+
+## Recommended Solution Instructions
+
+Add this to solution-level `AGENTS.md`, `CLAUDE.md`, or equivalent context files:
+
+```markdown
+## MCP Tools - ALWAYS PREFER
+
+This solution uses `vs-mcp-smart`, a workspace-aware wrapper around Visual Studio MCP. It resolves the correct VS-MCP endpoint from `.mcp/mcpserver.settings.json`.
+
+When `vs-mcp-smart` tools are available, ALWAYS use them before Grep/Glob/LS:
+
+| Instead of | Use |
+|------------|-----|
+| `Grep` for symbols | `FindSymbols`, `FindSymbolUsages` |
+| `LS` to explore projects | `GetSolutionTree` |
+| Reading files to find code | `FindSymbolDefinition` then `Read` |
+| Searching for method calls | `GetMethodCallers`, `GetMethodCalls` |
+
+Why: `vs-mcp-smart` routes to the correct Visual Studio instance for this workspace. MCP tools use Roslyn semantic analysis, reduce token use, and avoid broad text scans.
+
+If tools are missing, run `smart-vs-mcp doctor --workspace <repo>` before falling back to manual search.
 ```
 
 ## MCP Market Submission
