@@ -20,7 +20,9 @@ Lookup order:
 
 1. `<workspace>/.mcp/mcpserver.settings.json`
 2. `<workspace>/.mcpserver.settings.json`
-3. `%USERPROFILE%/.smart-vs-mcp/mcpserver.settings.json`
+3. `%LOCALAPPDATA%/MsvcInfo/mcpserver.settings.json`
+4. `SMART_VS_MCP_CONFIG` (env var)
+5. `%USERPROFILE%/.smart-vs-mcp/mcpserver.settings.json` (legacy fallback)
 
 Example:
 
@@ -107,7 +109,7 @@ Install as a Codex plugin:
 
 ```powershell
 codex plugin marketplace add al3xisdani3l/smart-vs-mcp
-codex plugin install smart-vs-mcp
+codex plugin add smart-vs-mcp
 ```
 
 Use the plugin once published, or configure the stdio server directly:

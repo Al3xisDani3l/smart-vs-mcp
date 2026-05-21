@@ -43,7 +43,7 @@ Use `smart-vs-mcp` as command only when `@al3xisdani3l/smart-vs-mcp` is installe
 
 - npm: publish/install as `@al3xisdani3l/smart-vs-mcp`; command remains `smart-vs-mcp`.
 - skillfish: `npx skillfish add Al3xisDani3l/smart-vs-mcp --all`.
-- Codex App and Codex CLI: install with `codex plugin marketplace add al3xisdani3l/smart-vs-mcp` then `codex plugin install smart-vs-mcp`; plugin autoconfigures MCP from `.mcp.json`.
+- Codex App and Codex CLI: install with `codex plugin marketplace add al3xisdani3l/smart-vs-mcp` then `codex plugin add smart-vs-mcp`; plugin autoconfigures MCP from `.mcp.json`.
 - Claude Code: install plugin or add equivalent MCP stdio command. Hook can inject status, but server execution still happens through MCP client config.
 - Claude Desktop: add an `mcpServers` entry using `npx -y @al3xisdani3l/smart-vs-mcp` unless global npm install exists.
 - Cursor, Gemini, Windsurf, and other clients: use stdio command if supported; otherwise use their plugin manifest/extension format from this repo.
