@@ -1,5 +1,3 @@
-# Changelog
-
 ## 1.0.1 - 2026-05-21
 
 ### Features
@@ -24,5 +22,3 @@
 ### Other
 
 - Se crea el servidor wrapper  smart_vs_mcp
-
-All notable changes to this project are generated during the release workflow from Conventional Commit messages.
