@@ -38,6 +38,7 @@
     ".codex-plugin/",
     ".claude-plugin/",
     ".cursor-plugin/",
+    "plugins/",
     "AGENTS.md",
     "CLAUDE.md",
     "GEMINI.md",
