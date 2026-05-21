@@ -3,12 +3,18 @@ import path from "node:path";
 import { parseArgs } from "./arg-parser.js";
 import { getStatus } from "./status.js";
 import type { StatusResult } from "./types.js";
+import { getCliVersion } from "./version.js";
 
 export async function runCli(args: string[], env: NodeJS.ProcessEnv, cwd: string): Promise<void> {
   const parsed = parseArgs(args);
 
   if (parsed.help) {
     printHelp();
+    return;
+  }
+
+  if (parsed.version) {
+    process.stdout.write(`${getCliVersion()}\n`);
     return;
   }
 
@@ -36,6 +42,8 @@ function printHelp(): void {
 
 Usage:
   smart-vs-mcp [--workspace <path>]
+  smart-vs-mcp --version
+  smart-vs-mcp -v
   smart-vs-mcp doctor [--workspace <path>]
   smart-vs-mcp status [--workspace <path>]
   smart-vs-mcp list [--workspace <path>]
@@ -45,6 +53,7 @@ Usage:
 
 function printStatus(status: StatusResult, command: "doctor" | "status"): void {
   const lines = [
+    `Version: ${getCliVersion()}`,
     `Mode: ${command}`,
     `Workspace: ${status.workspace.workspace}`,
     `Workspace Source: ${status.workspace.source}`,
