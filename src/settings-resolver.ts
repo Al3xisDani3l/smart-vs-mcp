@@ -53,9 +53,14 @@ export function findSettingsPath(workspace: string, env: NodeJS.ProcessEnv = pro
 }
 
 export function getSettingsCandidatePaths(workspace: string, env: NodeJS.ProcessEnv = process.env): string[] {
+  const localAppDataPath = env.LOCALAPPDATA
+    ? path.join(env.LOCALAPPDATA, "MsvcInfo", "mcpserver.settings.json")
+    : undefined;
+
   return [
     path.join(workspace, ".mcp", "mcpserver.settings.json"),
     path.join(workspace, ".mcpserver.settings.json"),
+    localAppDataPath,
     env.SMART_VS_MCP_CONFIG,
     path.join(os.homedir(), ".smart-vs-mcp", "mcpserver.settings.json"),
   ].filter(Boolean) as string[];

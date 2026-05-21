@@ -16,7 +16,9 @@ describe("stdio proxy diagnostics", () => {
 
   it("stays alive and exposes status tool when no workspace settings exist", async () => {
     const cwd = path.join(os.tmpdir(), `smart-vs-mcp-empty-${crypto.randomUUID()}`);
+    const isolatedHome = path.join(os.tmpdir(), `smart-vs-mcp-home-${crypto.randomUUID()}`);
     mkdirSync(cwd, { recursive: true });
+    mkdirSync(isolatedHome, { recursive: true });
 
     const client = new Client({ name: "diagnostic-test", version: "1.0.0" });
     openClients.push(client);
@@ -30,6 +32,9 @@ describe("stdio proxy diagnostics", () => {
         CODEX_WORKSPACE: "",
         WORKSPACE: "",
         INIT_CWD: "",
+        LOCALAPPDATA: "",
+        HOME: isolatedHome,
+        USERPROFILE: isolatedHome,
         PWD: cwd,
       },
     });

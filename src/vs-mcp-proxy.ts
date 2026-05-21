@@ -210,7 +210,7 @@ function buildStatusText(workspace: WorkspaceResolution, loaded?: LoadedSettings
     }
     lines.push("Expected settings:");
     lines.push(...candidates.map((candidate) => `- ${candidate}`));
-    lines.push("Fix: launch the MCP client from a solution workspace, pass --workspace <repo>, set SMART_VS_MCP_CONFIG, or create %USERPROFILE%\\.smart-vs-mcp\\mcpserver.settings.json.");
+    lines.push("Fix: launch from a solution workspace, pass --workspace <repo>, create %LOCALAPPDATA%\\MsvcInfo\\mcpserver.settings.json, set SMART_VS_MCP_CONFIG, or create %USERPROFILE%\\.smart-vs-mcp\\mcpserver.settings.json.");
   }
 
   return lines.join("\n");
