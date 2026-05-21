@@ -67,7 +67,8 @@ jobs:
           git add package.json package-lock.json CHANGELOG.md RELEASE_NOTES.md .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .cursor-plugin/plugin.json gemini-extension.json
           git commit -m "chore(release): publicar v${{ steps.version.outputs.version }}"
           git tag "v${{ steps.version.outputs.version }}"
-          git push origin HEAD:main --follow-tags
+          git push origin HEAD:main
+          git push origin "v${{ steps.version.outputs.version }}"
 
       - name: Publish npm package
         if: ${{ !inputs.dry_run }}
