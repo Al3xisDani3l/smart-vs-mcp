@@ -75,6 +75,17 @@ The included `smart-vs-mcp` skill explains setup, client configuration, workspac
 
 ## Client Installation
 
+Choose your installation method:
+
+- **[npm (global)](#npm)** — Standard Node.js package manager installation
+- **[Codex CLI](#codex-app--codex-cli)** — Codex plugin marketplace or stdio server
+- **[skillfish](#skillfish)** — Skill files for Claude repositories
+- **[Claude Code](#claude-code)** — Plugin or stdio server configuration
+- **[Claude Desktop](#claude-desktop)** — MCP server JSON configuration
+- **[Cursor / Gemini / Other CLIs](#cursor--gemini--other-clis)** — Plugin or stdio command
+
+For troubleshooting Codex plugin marketplace issues, see [Installing smart-vs-mcp for Codex CLI](docs/install-codex.md).
+
 ### npm
 
 Install globally:
