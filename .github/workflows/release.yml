@@ -1,0 +1,78 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "npm version argument: patch, minor, major, prerelease, or exact version"
+        required: true
+        default: patch
+      dry_run:
+        description: "Run validation without publishing"
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+
+      - name: Configure git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Install
+        run: npm ci
+
+      - name: Bump version
+        run: npm version "${{ inputs.version }}" --no-git-tag-version
+
+      - name: Sync manifest versions
+        run: npm run sync:version
+
+      - name: Update changelog
+        run: npm run changelog
+
+      - name: Verify
+        run: npm run verify
+
+      - name: Resolve version
+        id: version
+        run: echo "version=$(node -p \"require('./package.json').version\")" >> "$GITHUB_OUTPUT"
+
+      - name: Commit release files
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git add package.json package-lock.json CHANGELOG.md RELEASE_NOTES.md .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .cursor-plugin/plugin.json gemini-extension.json
+          git commit -m "chore(release): publicar v${{ steps.version.outputs.version }}"
+          git tag "v${{ steps.version.outputs.version }}"
+          git push origin HEAD:main --follow-tags
+
+      - name: Publish npm package
+        if: ${{ !inputs.dry_run }}
+        run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub release
+        if: ${{ !inputs.dry_run }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "v${{ steps.version.outputs.version }}" --title "v${{ steps.version.outputs.version }}" --notes-file RELEASE_NOTES.md

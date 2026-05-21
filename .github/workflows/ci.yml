@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Verify
+        run: npm run verify
+
+      - name: Validate manifests
+        run: |
+          node -e "const fs=require('fs'); for (const f of ['.mcp.json','.codex-plugin/plugin.json','.claude-plugin/plugin.json','.claude-plugin/marketplace.json','.cursor-plugin/plugin.json','hooks/hooks.codex.json','hooks/hooks.json','hooks/hooks-cursor.json','gemini-extension.json']) JSON.parse(fs.readFileSync(f,'utf8'));"

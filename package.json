@@ -5,6 +5,17 @@
   "description": "Workspace-aware stdio wrapper for Visual Studio MCP HTTP endpoints",
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Al3xisDani3l/smart-vs-mcp.git"
+  },
+  "homepage": "https://github.com/Al3xisDani3l/smart-vs-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/Al3xisDani3l/smart-vs-mcp/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "keywords": [
     "mcp",
     "visual-studio",
@@ -40,6 +51,9 @@
     "serve": "node dist/index.js",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
+    "verify": "npm run typecheck && npm test && npm run build && npm pack --dry-run",
+    "sync:version": "node scripts/sync-version.mjs",
+    "changelog": "node scripts/update-changelog.mjs",
     "deploy": "mcp-use deploy"
   },
   "dependencies": {
