@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "vs-mcp-smart": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@al3xisdani3l/smart-vs-mcp"
+      ]
+    }
+  }
+}

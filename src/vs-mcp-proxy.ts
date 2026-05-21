@@ -10,11 +10,12 @@ import {
   ListToolsRequestSchema,
   ReadResourceRequestSchema,
 } from "@modelcontextprotocol/sdk/types.js";
-import { loadSettings } from "./settings-resolver.js";
-import type { ResolveOptions } from "./types.js";
+import { getSettingsCandidatePaths, loadSettings } from "./settings-resolver.js";
+import type { LoadedSettings, ResolveOptions, WorkspaceResolution } from "./types.js";
 import { resolveWorkspace } from "./workspace-resolver.js";
 
 const CHILD_SERVER_NAME = "vs-mcp";
+const STATUS_TOOL_NAME = "smart_vs_mcp_status";
 
 type SessionState = {
   endpoint: string;
@@ -23,11 +24,27 @@ type SessionState = {
 };
 
 export async function runProxyServer(options: ResolveOptions): Promise<void> {
-  const workspace = resolveWorkspace(options);
-  const loaded = loadSettings(workspace.workspace, options.env);
   let state: SessionState | undefined;
 
+  const resolveLoadedSettings = (): { workspace: WorkspaceResolution; loaded?: LoadedSettings; error?: string } => {
+    const workspace = resolveWorkspace(options);
+    try {
+      return { workspace, loaded: loadSettings(workspace.workspace, options.env) };
+    } catch (error) {
+      return {
+        workspace,
+        error: error instanceof Error ? error.message : String(error),
+      };
+    }
+  };
+
   const getSession = async () => {
+    const resolved = resolveLoadedSettings();
+    if (!resolved.loaded) {
+      throw new Error(buildStatusText(resolved.workspace, undefined, resolved.error));
+    }
+
+    const loaded = resolved.loaded;
     if (state?.endpoint === loaded.endpoint && state.session.isConnected) {
       return state.session;
     }
@@ -60,22 +77,50 @@ export async function runProxyServer(options: ResolveOptions): Promise<void> {
         resources: { listChanged: true, subscribe: true },
         prompts: { listChanged: true },
       },
-      instructions: `Workspace-aware VS-MCP proxy. Workspace: ${workspace.workspace}. Endpoint: ${loaded.endpoint}.`,
+      instructions: "Workspace-aware VS-MCP proxy. Use smart_vs_mcp_status when no workspace config is available.",
     },
   );
 
   server.setRequestHandler(ListToolsRequestSchema, async () => {
-    const session = await getSession();
-    const tools = await session.listTools();
-    return { tools };
+    const resolved = resolveLoadedSettings();
+    const statusTool = createStatusTool(resolved.workspace, resolved.loaded, resolved.error);
+
+    if (!resolved.loaded) {
+      return { tools: [statusTool] };
+    }
+
+    try {
+      const session = await getSession();
+      const tools = await session.listTools();
+      return { tools: [statusTool, ...tools.filter((tool) => tool.name !== STATUS_TOOL_NAME)] };
+    } catch {
+      return { tools: [statusTool] };
+    }
   });
 
   server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    if (request.params.name === STATUS_TOOL_NAME) {
+      const resolved = resolveLoadedSettings();
+      return {
+        content: [
+          {
+            type: "text",
+            text: buildStatusText(resolved.workspace, resolved.loaded, resolved.error),
+          },
+        ],
+      };
+    }
+
     const session = await getSession();
     return session.callTool(request.params.name, request.params.arguments ?? {});
   });
 
   server.setRequestHandler(ListResourcesRequestSchema, async (request) => {
+    const resolved = resolveLoadedSettings();
+    if (!resolved.loaded) {
+      return { resources: [] };
+    }
+
     const session = await getSession();
     return session.listResources(request.params?.cursor);
   });
@@ -86,11 +131,21 @@ export async function runProxyServer(options: ResolveOptions): Promise<void> {
   });
 
   server.setRequestHandler(ListResourceTemplatesRequestSchema, async () => {
+    const resolved = resolveLoadedSettings();
+    if (!resolved.loaded) {
+      return { resourceTemplates: [] };
+    }
+
     const session = await getSession();
     return session.listResourceTemplates();
   });
 
   server.setRequestHandler(ListPromptsRequestSchema, async () => {
+    const resolved = resolveLoadedSettings();
+    if (!resolved.loaded) {
+      return { prompts: [] };
+    }
+
     const session = await getSession();
     return session.listPrompts();
   });
@@ -100,8 +155,63 @@ export async function runProxyServer(options: ResolveOptions): Promise<void> {
     return session.getPrompt(request.params.name, request.params.arguments ?? {});
   });
 
-  process.stderr.write(`smart-vs-mcp workspace=${workspace.workspace} endpoint=${loaded.endpoint}\n`);
+  const startup = resolveLoadedSettings();
+  process.stderr.write(
+    startup.loaded
+      ? `smart-vs-mcp workspace=${startup.workspace.workspace} endpoint=${startup.loaded.endpoint}\n`
+      : `smart-vs-mcp diagnostic-mode workspace=${startup.workspace.workspace} error=${startup.error}\n`,
+  );
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
+}
+
+function createStatusTool(workspace: WorkspaceResolution, loaded?: LoadedSettings, error?: string) {
+  return {
+    name: STATUS_TOOL_NAME,
+    description: "Show smart-vs-mcp workspace, settings, endpoint, and recovery diagnostics.",
+    inputSchema: {
+      type: "object",
+      properties: {},
+      additionalProperties: false,
+    },
+    annotations: {
+      readOnlyHint: true,
+    },
+    _meta: {
+      workspace: workspace.workspace,
+      endpoint: loaded?.endpoint,
+      error,
+    },
+  };
+}
+
+function buildStatusText(workspace: WorkspaceResolution, loaded?: LoadedSettings, error?: string): string {
+  const candidates = getSettingsCandidatePaths(workspace.workspace);
+  const lines = [
+    "smart-vs-mcp status",
+    `Workspace: ${workspace.workspace}`,
+    `Workspace Source: ${workspace.source}`,
+    `Start Path: ${workspace.startPath}`,
+  ];
+
+  if (workspace.solutionPath) {
+    lines.push(`Solution: ${workspace.solutionPath}`);
+  }
+
+  if (loaded) {
+    lines.push(`Settings: ${loaded.sourcePath}`);
+    lines.push(`Endpoint: ${loaded.endpoint}`);
+    lines.push("Proxy: ready");
+  } else {
+    lines.push("Proxy: diagnostic mode");
+    if (error) {
+      lines.push(`Error: ${error}`);
+    }
+    lines.push("Expected settings:");
+    lines.push(...candidates.map((candidate) => `- ${candidate}`));
+    lines.push("Fix: launch the MCP client from a solution workspace, pass --workspace <repo>, set SMART_VS_MCP_CONFIG, or create %USERPROFILE%\\.smart-vs-mcp\\mcpserver.settings.json.");
+  }
+
+  return lines.join("\n");
 }

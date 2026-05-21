@@ -73,17 +73,53 @@ The included `smart-vs-mcp` skill explains setup, client configuration, workspac
 
 ## Client Installation
 
+### npm
+
+Install globally:
+
+```powershell
+npm install -g @al3xisdani3l/smart-vs-mcp
+```
+
+Or run without global install:
+
+```powershell
+npx -y @al3xisdani3l/smart-vs-mcp doctor --workspace C:\Repos\SILT
+```
+
+### skillfish
+
+Install the skill files:
+
+```powershell
+npx skillfish add Al3xisDani3l/smart-vs-mcp --all
+```
+
+Submit/update discovery:
+
+```powershell
+npx skillfish submit Al3xisDani3l/smart-vs-mcp -y
+```
+
 ### Codex App / Codex CLI
+
+Install as a Codex plugin:
+
+```powershell
+codex plugin marketplace add al3xisdani3l/smart-vs-mcp
+codex plugin install smart-vs-mcp
+```
 
 Use the plugin once published, or configure the stdio server directly:
 
 ```toml
 [mcp_servers.vs-mcp-smart]
 type = "stdio"
-command = "smart-vs-mcp"
+command = "npx"
+args = ["-y", "@al3xisdani3l/smart-vs-mcp"]
 ```
 
-Use `vs-mcp-smart` as the logical MCP server name in client configs and repo instructions. The executable remains `smart-vs-mcp`.
+Use `vs-mcp-smart` as the logical MCP server name in client configs and repo instructions. The executable remains `smart-vs-mcp` when globally installed.
 
 ### Claude Code
 
@@ -94,6 +130,22 @@ The plugin hook injects diagnostic context at session start. It does not edit yo
 ### Claude Desktop
 
 Add an MCP server entry:
+
+```json
+{
+  "mcpServers": {
+    "vs-mcp-smart": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@al3xisdani3l/smart-vs-mcp"
+      ]
+    }
+  }
+}
+```
+
+If the package is installed globally, this also works:
 
 ```json
 {
@@ -124,6 +176,8 @@ SessionStart hooks are diagnostic only. They:
 - emit host-compatible context JSON
 - never modify user config files
 - never leave background processes running
+
+Codex plugin installs use `hooks/hooks.codex.json`. Claude Code uses `hooks/hooks.json`.
 
 On Windows, hook execution expects Git for Windows Bash. If `bash` resolves to WSL (`C:\Windows\system32\bash.exe`), use Git Bash explicitly for local simulation:
 

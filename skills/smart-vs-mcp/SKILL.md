@@ -33,14 +33,19 @@ Use this skill when working with the workspace-aware Visual Studio MCP wrapper i
    ```toml
    [mcp_servers.vs-mcp-smart]
    type = "stdio"
-   command = "smart-vs-mcp"
+   command = "npx"
+   args = ["-y", "@al3xisdani3l/smart-vs-mcp"]
    ```
+
+Use `smart-vs-mcp` as command only when `@al3xisdani3l/smart-vs-mcp` is installed globally.
 
 ## Client Notes
 
-- Codex App and Codex CLI: prefer global stdio config above. Launch from target workspace so cwd/env resolves the right `.mcp` settings.
+- npm: publish/install as `@al3xisdani3l/smart-vs-mcp`; command remains `smart-vs-mcp`.
+- skillfish: `npx skillfish add Al3xisDani3l/smart-vs-mcp --all`.
+- Codex App and Codex CLI: install with `codex plugin marketplace add al3xisdani3l/smart-vs-mcp` then `codex plugin install smart-vs-mcp`; plugin autoconfigures MCP from `.mcp.json`.
 - Claude Code: install plugin or add equivalent MCP stdio command. Hook can inject status, but server execution still happens through MCP client config.
-- Claude Desktop: add an `mcpServers` entry using `smart-vs-mcp` as command.
+- Claude Desktop: add an `mcpServers` entry using `npx -y @al3xisdani3l/smart-vs-mcp` unless global npm install exists.
 - Cursor, Gemini, Windsurf, and other clients: use stdio command if supported; otherwise use their plugin manifest/extension format from this repo.
 
 ## Solution AGENTS.md Guidance
@@ -72,6 +77,7 @@ If tools are missing, run `smart-vs-mcp doctor --workspace <repo>` before fallin
 
 - Wrong Visual Studio instance: run `smart-vs-mcp doctor --workspace <path>` and confirm `Resolved Port`.
 - Missing config: create `.mcp/mcpserver.settings.json` at solution root.
+- Claude/Codex opens without workspace: the MCP server should stay alive and expose `smart_vs_mcp_status`; use it to see expected config paths.
 - VS-MCP offline: start Visual Studio and its MCP extension for that solution, then rerun `doctor`.
 - WSL path mismatch: pass `--workspace /mnt/c/...` or use a Windows-side shell when Visual Studio runs on Windows.
 - Windows hook simulation: prefer Git for Windows Bash at `C:\Program Files\Git\bin\bash.exe`; WSL `bash.exe` can hang or misread Windows paths.

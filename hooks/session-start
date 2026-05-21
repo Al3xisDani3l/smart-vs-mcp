@@ -25,7 +25,7 @@ else
   status_message="smart-vs-mcp is not built. Run: npm install && npm run build"
 fi
 
-skill_hint="Use the smart-vs-mcp skill for setup, diagnostics, and MCP client configuration. Global MCP stdio command: smart-vs-mcp. Per-workspace config: .mcp/mcpserver.settings.json."
+skill_hint="Use the smart-vs-mcp skill for setup, diagnostics, and MCP client configuration. Default MCP stdio command: npx -y @al3xisdani3l/smart-vs-mcp. Per-workspace config: .mcp/mcpserver.settings.json."
 session_context="<smart-vs-mcp>\n${skill_hint}\n\nCurrent diagnostic:\n${status_message}\n</smart-vs-mcp>"
 escaped_context="$(escape_for_json "$session_context")"
 

@@ -8,6 +8,9 @@
   "homepage": "https://github.com/Al3xisDani3l/smart-vs-mcp",
   "repository": "https://github.com/Al3xisDani3l/smart-vs-mcp",
   "license": "MIT",
+  "skills": [
+    "./skills/"
+  ],
   "keywords": [
     "mcp",
     "visual-studio",

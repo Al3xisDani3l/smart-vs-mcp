@@ -49,14 +49,16 @@ export function loadSettings(workspace: string, env: NodeJS.ProcessEnv = process
 }
 
 export function findSettingsPath(workspace: string, env: NodeJS.ProcessEnv = process.env): string | undefined {
-  const candidates = [
+  return getSettingsCandidatePaths(workspace, env).find((candidate) => existsSync(candidate));
+}
+
+export function getSettingsCandidatePaths(workspace: string, env: NodeJS.ProcessEnv = process.env): string[] {
+  return [
     path.join(workspace, ".mcp", "mcpserver.settings.json"),
     path.join(workspace, ".mcpserver.settings.json"),
     env.SMART_VS_MCP_CONFIG,
     path.join(os.homedir(), ".smart-vs-mcp", "mcpserver.settings.json"),
   ].filter(Boolean) as string[];
-
-  return candidates.find((candidate) => existsSync(candidate));
 }
 
 export function buildEndpoint(settings: VsMcpSettings): string {

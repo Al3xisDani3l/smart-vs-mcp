@@ -5,7 +5,8 @@
 ```toml
 [mcp_servers.vs-mcp-smart]
 type = "stdio"
-command = "smart-vs-mcp"
+command = "npx"
+args = ["-y", "@al3xisdani3l/smart-vs-mcp"]
 ```
 
 ## Claude Desktop
@@ -14,8 +15,11 @@ command = "smart-vs-mcp"
 {
   "mcpServers": {
     "vs-mcp-smart": {
-      "command": "smart-vs-mcp",
-      "args": []
+      "command": "npx",
+      "args": [
+        "-y",
+        "@al3xisdani3l/smart-vs-mcp"
+      ]
     }
   }
 }

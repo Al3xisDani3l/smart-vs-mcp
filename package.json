@@ -1,5 +1,5 @@
 {
-  "name": "smart-vs-mcp",
+  "name": "@al3xisdani3l/smart-vs-mcp",
   "type": "module",
   "version": "1.0.0",
   "description": "Workspace-aware stdio wrapper for Visual Studio MCP HTTP endpoints",
@@ -23,6 +23,7 @@
     "public/",
     "skills/",
     "hooks/",
+    ".mcp.json",
     ".codex-plugin/",
     ".claude-plugin/",
     ".cursor-plugin/",
