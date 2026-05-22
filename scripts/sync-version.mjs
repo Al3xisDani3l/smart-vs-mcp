@@ -5,6 +5,7 @@ const files = [
   ".claude-plugin/plugin.json",
   ".claude-plugin/marketplace.json",
   ".cursor-plugin/plugin.json",
+  "plugins/smart-vs-mcp/plugin.json",
   "gemini-extension.json",
 ];
 

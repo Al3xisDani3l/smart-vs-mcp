@@ -64,7 +64,7 @@ jobs:
       - name: Commit release files
         if: ${{ !inputs.dry_run }}
         run: |
-          git add package.json package-lock.json CHANGELOG.md RELEASE_NOTES.md .codex-plugin/plugin.json .claude-plugin/plugin.json .claude-plugin/marketplace.json .cursor-plugin/plugin.json gemini-extension.json
+          git add -A
           git commit -m "chore(release): publicar v${{ steps.version.outputs.version }}"
           git tag "v${{ steps.version.outputs.version }}"
           git push origin HEAD:main

@@ -57,6 +57,19 @@ codex plugin list
 
 You should see `smart-vs-mcp` in the output.
 
+## Refresh marketplace snapshot after version changes
+
+When you change repo version/manifests, refresh marketplace before reinstall:
+
+```powershell
+npm run sync:version
+codex plugin marketplace remove <marketplace-name>
+codex plugin marketplace add <marketplace-source>
+codex plugin add smart-vs-mcp@<marketplace-name>
+```
+
+Then confirm install path/version corresponds to the expected manifest version.
+
 ## Next Steps
 
 Configure your MCP server in Codex config or use the plugin's built-in `smart_vs_mcp_status` command to diagnose workspace routing.
