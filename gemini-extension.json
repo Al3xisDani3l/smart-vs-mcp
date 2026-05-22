@@ -1,6 +1,6 @@
 {
   "name": "smart-vs-mcp",
   "description": "Workspace-aware stdio wrapper for Visual Studio MCP HTTP endpoints.",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "contextFileName": "GEMINI.md"
 }
