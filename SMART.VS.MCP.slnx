@@ -1,1 +1,3 @@
-<Solution />
+<Solution>
+  <Project Path="tests/EmptyTestLibrary/EmptyTestLibrary.csproj" />
+</Solution>
