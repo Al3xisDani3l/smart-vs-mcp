@@ -1,8 +1,6 @@
 {
   "port": 3025,
   "defaultPathFormat": "Windows",
-  "disabledTools": [
-    "get_document_outline"
-  ],
+  "disabledTools": [],
   "autoStart": true
 }

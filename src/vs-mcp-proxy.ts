@@ -23,8 +23,15 @@ type SessionState = {
   session: Awaited<ReturnType<MCPClient["createSession"]>>;
 };
 
+type BridgeDiagnostics = {
+  lastError?: string;
+  lastConnectedEndpoint?: string;
+  forwardedToolCount?: number;
+};
+
 export async function runProxyServer(options: ResolveOptions): Promise<void> {
   let state: SessionState | undefined;
+  const diagnostics: BridgeDiagnostics = {};
 
   const resolveLoadedSettings = (): { workspace: WorkspaceResolution; loaded?: LoadedSettings; error?: string } => {
     const workspace = resolveWorkspace(options);
@@ -53,17 +60,31 @@ export async function runProxyServer(options: ResolveOptions): Promise<void> {
       await state.client.closeAllSessions();
     }
 
-    const client = new MCPClient({
-      mcpServers: {
-        [CHILD_SERVER_NAME]: {
-          url: loaded.endpoint,
+    const candidateEndpoints = getCandidateEndpoints(loaded.endpoint);
+    let lastError = "Unknown MCP bridge error";
+    for (const endpoint of candidateEndpoints) {
+      const client = new MCPClient({
+        mcpServers: {
+          [CHILD_SERVER_NAME]: {
+            url: endpoint,
+          },
         },
-      },
-    });
+      });
+      try {
+        const session = await client.createSession(CHILD_SERVER_NAME);
+        await session.listTools();
+        state = { endpoint, client, session };
+        diagnostics.lastConnectedEndpoint = endpoint;
+        diagnostics.lastError = undefined;
+        return session;
+      } catch (error) {
+        await client.closeAllSessions();
+        lastError = error instanceof Error ? error.message : String(error);
+      }
+    }
 
-    const session = await client.createSession(CHILD_SERVER_NAME);
-    state = { endpoint: loaded.endpoint, client, session };
-    return session;
+    diagnostics.lastError = `Unable to connect to VS-MCP endpoint. Tried: ${candidateEndpoints.join(", ")}. Last error: ${lastError}`;
+    throw new Error(diagnostics.lastError);
   };
 
   const server = new Server(
@@ -92,8 +113,10 @@ export async function runProxyServer(options: ResolveOptions): Promise<void> {
     try {
       const session = await getSession();
       const tools = await session.listTools();
+      diagnostics.forwardedToolCount = tools.length;
       return { tools: [statusTool, ...tools.filter((tool) => tool.name !== STATUS_TOOL_NAME)] };
-    } catch {
+    } catch (error) {
+      diagnostics.lastError = error instanceof Error ? error.message : String(error);
       return { tools: [statusTool] };
     }
   });
@@ -105,7 +128,7 @@ export async function runProxyServer(options: ResolveOptions): Promise<void> {
         content: [
           {
             type: "text",
-            text: buildStatusText(resolved.workspace, resolved.loaded, resolved.error),
+            text: buildStatusText(resolved.workspace, resolved.loaded, resolved.error, diagnostics),
           },
         ],
       };
@@ -186,7 +209,25 @@ function createStatusTool(workspace: WorkspaceResolution, loaded?: LoadedSetting
   };
 }
 
-function buildStatusText(workspace: WorkspaceResolution, loaded?: LoadedSettings, error?: string): string {
+export function getCandidateEndpoints(endpoint: string): string[] {
+  const normalized = endpoint.endsWith("/") ? endpoint : `${endpoint}/`;
+  const candidates = new Set<string>([normalized]);
+
+  if (normalized.endsWith("/sdk/")) {
+    candidates.add(normalized.slice(0, -4));
+    candidates.add(`${normalized}mcp/`);
+    candidates.add(`${normalized.slice(0, -4)}mcp/`);
+  } else if (normalized.endsWith("/mcp/")) {
+    candidates.add(normalized.replace(/\/mcp\/$/, "/sdk/"));
+  } else {
+    candidates.add(`${normalized}sdk/`);
+    candidates.add(`${normalized}mcp/`);
+  }
+
+  return [...candidates];
+}
+
+function buildStatusText(workspace: WorkspaceResolution, loaded?: LoadedSettings, error?: string, diagnostics?: BridgeDiagnostics): string {
   const candidates = getSettingsCandidatePaths(workspace.workspace);
   const lines = [
     "smart-vs-mcp status",
@@ -202,6 +243,15 @@ function buildStatusText(workspace: WorkspaceResolution, loaded?: LoadedSettings
   if (loaded) {
     lines.push(`Settings: ${loaded.sourcePath}`);
     lines.push(`Endpoint: ${loaded.endpoint}`);
+    if (diagnostics?.lastConnectedEndpoint) {
+      lines.push(`Proxy Endpoint: ${diagnostics.lastConnectedEndpoint}`);
+    }
+    if (typeof diagnostics?.forwardedToolCount === "number") {
+      lines.push(`Forwarded Tools: ${diagnostics.forwardedToolCount}`);
+    }
+    if (diagnostics?.lastError) {
+      lines.push(`Bridge Error: ${diagnostics.lastError}`);
+    }
     lines.push("Proxy: ready");
   } else {
     lines.push("Proxy: diagnostic mode");
