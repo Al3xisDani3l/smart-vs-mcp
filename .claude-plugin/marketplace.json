@@ -9,7 +9,7 @@
       "name": "smart-vs-mcp",
       "description": "Workspace-aware stdio wrapper for Visual Studio MCP HTTP endpoints.",
       "version": "1.0.5",
-      "source": "./.codex-plugin",
+      "source": "../.codex-plugin",
       "author": {
         "name": "Al3xisDani3l"
       }
