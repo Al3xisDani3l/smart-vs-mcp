@@ -1,13 +1,9 @@
-## 1.0.5 - 2026-05-21
+## 1.0.6 - 2026-05-22
 
-Changes since v1.0.4.
+Changes since v1.0.5.
 
-### Features
+### Fixes
 
-- add marketplace-discoverable plugin structure
-
-### Documentation
-
-- add installation method links and troubleshooting guide reference
-- add marketplace troubleshooting guide
-- clarify Codex plugin marketplace @ syntax
+- compatibilizar marketplace de codex
+- corregir source relativo del marketplace
+- corregir source del marketplace para codex
