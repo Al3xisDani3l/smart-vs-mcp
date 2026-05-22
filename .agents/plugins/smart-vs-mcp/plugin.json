@@ -16,9 +16,9 @@
     "codex",
     "claude"
   ],
-  "skills": "./skills/",
-  "mcpServers": "./.mcp.json",
-  "hooks": "./hooks/hooks.codex.json",
+  "skills": "../../../skills/",
+  "mcpServers": "../../../.mcp.json",
+  "hooks": "../../../hooks/hooks.codex.json",
   "interface": {
     "displayName": "smart-vs-mcp",
     "shortDescription": "Route VS-MCP by workspace instead of hardcoded ports",
@@ -37,8 +37,8 @@
     "privacyPolicyURL": "https://github.com/Al3xisDani3l/smart-vs-mcp",
     "termsOfServiceURL": "https://github.com/Al3xisDani3l/smart-vs-mcp",
     "brandColor": "#2563EB",
-    "composerIcon": "./public/icon.svg",
-    "logo": "./public/icon.svg",
+    "composerIcon": "../../../public/icon.svg",
+    "logo": "../../../public/icon.svg",
     "screenshots": []
   }
 }
