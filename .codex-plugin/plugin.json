@@ -1,6 +1,6 @@
 {
   "name": "smart-vs-mcp",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Workspace-aware stdio wrapper for Visual Studio MCP HTTP endpoints.",
   "author": {
     "name": "Al3xisDani3l"
