@@ -1,11 +1,14 @@
 import { readFileSync, writeFileSync } from "node:fs";
 
 const files = [
+  "plugin.json",
+  ".agents/plugins/smart-vs-mcp/plugin.json",
   ".codex-plugin/plugin.json",
   ".claude-plugin/plugin.json",
   ".claude-plugin/marketplace.json",
   ".cursor-plugin/plugin.json",
   "plugins/smart-vs-mcp/plugin.json",
+  "plugins/smart-vs-mcp/.codex-plugin/plugin.json",
   "gemini-extension.json",
 ];
 
