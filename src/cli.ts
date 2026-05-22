@@ -1,4 +1,4 @@
-import { type Dirent, readdirSync } from "node:fs";
+import { existsSync, type Dirent, readdirSync } from "node:fs";
 import path from "node:path";
 import { parseArgs } from "./arg-parser.js";
 import { getStatus } from "./status.js";
@@ -121,7 +121,10 @@ function scanForSettings(directory: string, found: string[], remainingDepth: num
 
     const child = path.join(directory, entry.name);
     if (entry.name === ".mcp") {
-      found.push(path.join(child, "mcpserver.settings.json"));
+      const settingsPath = path.join(child, "mcpserver.settings.json");
+      if (existsSync(settingsPath)) {
+        found.push(settingsPath);
+      }
       continue;
     }
 
